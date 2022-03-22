@@ -36,7 +36,7 @@ I am opting to use the [OHLCV](https://docs.coinapi.io/?python#ohlcv) (open, hig
 Network restrictions where observed when using the sandbox endpoint which results in:
 
 <html>
-<style>
+    <style>
         body {
             background-color: #e8ebeb;
             font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -131,13 +131,15 @@ Network restrictions where observed when using the sandbox endpoint which result
         .loading {
             margin: 2em auto 1em;
         }
-</style>
-<h1>Web Page Blocked</h1>
+    </style>
+    <body>
+    <h1>Web Page Blocked</h1>
     <p>The web page you are trying to visit has been blocked in accordance with company policy. Please contact your system administrator if you believe this is an error.</p>
     <div class="response">
         <p><b>User:</b> ORG\USER</p>
         <p><b>URL:</b> rest-sandbox.coinapi.io/v1/quotes/BITSTAMP_SPOT_BTC_USD/current</p>
         <p><b>Category:</b> cryptocurrency</p>
     </div>
+    </body>
 </html>
 # database 

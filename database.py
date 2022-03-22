@@ -4,6 +4,11 @@ import sqlite3, random, string
 conn = sqlite3.connect('cache.db')
 
 c = conn.cursor()
+"""
+Making a database to cache the data for future use and to prevent frequent requests.
+
+Can also be used to perform analysis and interesting statistical comparison.
+"""
 
 def createDB():
     with conn:
@@ -60,3 +65,5 @@ def fetchRate(time_open):
         except:
             print('entry does not exists or id is out of range.')
             return 0
+
+
