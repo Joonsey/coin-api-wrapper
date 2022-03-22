@@ -1,5 +1,3 @@
-# coin-api-wrapper
-
 ## A crypto currency exchange API
 Made using the https://docs.coinapi.io/. the intent of this wrapper is to work as a proxy to bypass network restriction on common network restrictions.
 
@@ -33,8 +31,16 @@ The Coin class sends a request upon initialization, this is for validation purpo
 
 Time format that's being sendt to the server for specific in the ```python get_historical_data``` function is a bit weird, it's ISO 8601 but it's without the last decimal numbers. I fix this solution by removing the 7 last characters as its seems to be consistently 7 characters.
 
-I am opting to use the [OHLCV](https://docs.coinapi.io/?python#ohlcv) (open, high,    low, close, volume) primarily. This is because it covers the information and format I need to make a good visualization. In theory if I had unlimited key usage I believe the [Quotes](https://docs.coinapi.io/?python#quotes) might be the superior options to get close to real-time updates.
+I am opting to use the [OHLCV](https://docs.coinapi.io/?python#ohlcv) (open, high, low, close, volume) primarily. This is because it covers the information and format I need to make a good visualization. In theory if I had unlimited key usage I believe the [Quotes](https://docs.coinapi.io/?python#quotes) might be the superior options to get close to real-time updates.
 
+Network restrictions where observed when using the sandbox endpoint which results in:
 
+<h1>Web Page Blocked</h1>
+    <p>The web page you are trying to visit has been blocked in accordance with company policy. Please contact your system administrator if you believe this is an error.</p>
+    <div class="response">
+        <p><b>User:</b> ORG\USER</p>
+        <p><b>URL:</b> rest-sandbox.coinapi.io/v1/quotes/BITSTAMP_SPOT_BTC_USD/current</p>
+        <p><b>Category:</b> cryptocurrency</p>
+    </div>
 
 # database 
