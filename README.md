@@ -44,55 +44,44 @@ Network restrictions where observed when using the sandbox endpoint which result
             margin: 0;
             color: #070808;
         }
-
         a:link {
             color: #0ba4e8;
         }
-
         b,
         strong {
             font-weight: 500;
         }
-
         p {
             line-height: 1.2em;
         }
-
         button {
             overflow: visible;
         }
-
         button, input, optgroup, select, textarea {
             color: inherit;
             font: inherit;
             margin: 0;
         }
-
         .center {
             text-align: center;
             margin-left: auto;
             margin-right: auto;
         }
-
         #dError,
         .msg {
             color: #d94949;
             margin: 20px 0;
         }
-
         fieldset .msg {
             margin: 0;
         }
-
         #content {
             padding-top: 100px;
         }
-
         #content img {
             display: block;
             margin: auto;
         }
-
         #content h1 {
             font-style: normal;
             font-weight: normal;
@@ -103,7 +92,6 @@ Network restrictions where observed when using the sandbox endpoint which result
             color: #070808;
             margin: 10px auto 8px;
         }
-
         #content > p {
             text-align: center;
             margin-left: auto;
@@ -112,7 +100,6 @@ Network restrictions where observed when using the sandbox endpoint which result
             font-size: 14px;
             line-height: 20px;
         }
-
         .response {
             background-color: #fff;
             color: #5a636b;
@@ -124,29 +111,23 @@ Network restrictions where observed when using the sandbox endpoint which result
             box-sizing: border-box;
             border-radius: 8px;
         }
-
         .response p {
             margin: 0 0 1em;
         }
-
         .response p:last-child {
             margin: 0;
         }
-
         .response b {
             color: #070808;
         }
-
         .response .msg b {
             color: #d94949;
         }
-
         .response form td,
         .response form input {
             font-size: 1.1em;
             font-weight: bold;
         }
-
         .loading {
             margin: 2em auto 1em;
         }
