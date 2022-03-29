@@ -1,5 +1,6 @@
 from email import header
-import requests, json
+from nbformat import write
+import requests, json, csv
 from datetime import datetime, timedelta
 
 
@@ -11,24 +12,25 @@ API_KEY = {'X-CoinAPI-Key' : '4C3DE064-C4ED-40D8-B61A-504E43C15FA3'}
 
 class Coin:
     def __init__(self, coin, apiKey, sandbox=False):
-        self.base_url = BASE_URL if sandbox == True else BASE_SANDBOX_URL
+        self.base_url = BASE_URL if sandbox == False else BASE_SANDBOX_URL
 
         url = self.base_url + coin + '/current'
+        # print(url)
         headers = apiKey
-        response = requests.get(url, headers=headers)
-
-    
+        # response = requests.get(url, headers=headers)
+        self.coin = coin
+        self.apiKey = apiKey
         #print(response.json())
-        try:
-            if response.json()['symbol_id'] == coin:
-                """" 
-                Validation
-                """
-                self.coin = coin
-                self.apiKey = apiKey
-        except:
-            print(response.ok)
-            print(response.text)
+        # try:
+        #     if response.json()['symbol_id'] == coin:
+        #         """" 
+        #         Validation
+        #         """
+        #         self.coin = coin
+        #         self.apiKey = apiKey
+        # except:
+        #     print(response.ok)
+        #     print(response.text)
 
     def get_current_info(self):
         response = requests.get(self.base_url + self.coin + '/current', headers=self.apiKey).json()
@@ -84,32 +86,49 @@ class Coin:
         Month:	1MTH, 2MTH, 3MTH, 4MTH, 6MTH \n
         Year:	1YRS, 2YRS, 3YRS, 4YRS, 5YRS
         """
-        url = self.base_url + self.coin + "/ohlcv/" + self.coin + "/latest?period_id="+ period + "&include_empty_items=" + str(include_empty)
-        response = requests(url, header=self.apiKey)
+        url = self.base_url.removesuffix("/quotes/") + "/ohlcv/" + self.coin + "/latest?period_id="+ period #+ "&include_empty_items=" + str(include_empty)
+        response = requests.get(url, headers=self.apiKey).json()
         
+        all_data = []
+        
+        
+        print(url)
 
-        if previous_data == 0:
-            previous_data = data
-        data = {}
-
+        previous_closing_price = 0
         # filtering the response and returns the data we want
-        data['time_open'] = response['time_open']
-        data['open'] = response['price_open']
-        data['high'] = response['price_high']
-        data['low'] = response['price_low']
-        data['close'] = response['price_close']
-        data['volume_traded'] = response['volume_traded']
-        data['trades_count'] = response['trades_count']
-        data['change'] = (response['closing_price'] - previous_data['closing_price']) / previous_data['closing_price'] * 100
+        for r in response:
+            data = {}
+            data['time_open'] = r['time_open']
+            data['open'] = r['price_open']
+            data['high'] = r['price_high']
+            data['low'] = r['price_low']
+            data['close'] = r['price_close']
+            data['volume_traded'] = r['volume_traded']
+            data['trades_count'] = r['trades_count']
+            #data['change'] = (r['price_close'] - previous_closing_price) / previous_closing_price * 100
+            all_data.append(data)
+            #previous_closing_price = (lambda x: if r['price_close'] > 1)
+        print(all_data)
+        return all_data
 
-        previous_data = data
-        return data
-        
+    
+    def write_to_csv(self):
+        write_data_to_file(self.ohlvc())
+    
+
+def write_data_to_file(data):
+
+    keys = data[0].keys()
+
+    with open('data.csv', 'w', newline='') as output:
+        dict_writer = csv.DictWriter(output, keys) 
+        dict_writer.writeheader()
+        dict_writer.writerows(data)
 
 if __name__ == "__main__":
-    btc = Coin(btc_usd_coin_symbol, API_KEY)
+    btc = Coin("KRAKENFTS_PERP_BTC_USD", API_KEY)
 
     # print(btc.get_current_info())
     # print(btc.get_historical_info())
-    # print(btc.ohlvc())
+    print(btc.write_to_csv())
 
