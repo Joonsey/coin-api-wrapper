@@ -20,19 +20,29 @@ async function request_coins(coin){
         return response.json()
     }
 
-data = []
+coin_data = []
 
-async function parse_data(){
+// async function parse_data(){
 
-    for (let coin = 0; coin < coins.length; coin++) {
-        request_coins(coins[coin]).then((x) => {
-            for (let i = 0; i < x.length; i++) {
-                actual_btc_coin_data.push(x[i]['price_close'])
-                time_labels.push(x[i]['time_period_end'].slice(0,10))}
-            })
-        }
-    }
-parse_data().then(main)
+//     for (let coin = 0; coin < coins.length; coin++) {
+//         request_coins(coins[coin]).then((x) => {
+//             for (let i = 0; i < x.length; i++) {
+//                 data.push(x[i]['price_close'])
+//                 time_labels.push(x[i]['time_period_end'].slice(0,10))}
+//             })
+//         }
+//     }
+// parse_data().then(main)
+
+
+
+coins.forEach((coin) => {
+    request_coins(coin).then((x) => {
+        for (let i = 0; i < x.length; i++) {
+            coin_data.push(x[i]['price_close'])
+            }
+        })
+    }).then(main)
 
 const time_labels = []
 let actual_btc_coin_data = []
@@ -44,6 +54,7 @@ let actual_btc_coin_data = []
 
 
 function main(){
+    console.log('Main was called succesfully...')
     sliced_btc_data = actual_btc_coin_data.slice(0,6)
     var daily_coin_price_data = [
         actual_btc_coin_data        
@@ -74,7 +85,7 @@ function main(){
 
     const data = {
         labels: time_labels,
-        datasets: daily_coin_data};
+        datasets: data};
         
     const config = {
         type: 'line',
