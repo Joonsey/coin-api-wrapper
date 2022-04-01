@@ -15,8 +15,8 @@ const coins = [
 ]
 
 async function request_coins(coin){
-    const response = await fetch("http://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_"+coin+"_USD/latest?period_id=1HRS",{
-        headers: {'X-CoinAPI-Key' : '4C3DE064-C4ED-40D8-B61A-504E43C15FA3'}})
+    const response = await fetch("http://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_"+coin+"_USD/latest?period_id=1HRS",
+    {headers: {'X-CoinAPI-Key' : '4C3DE064-C4ED-40D8-B61A-504E43C15FA3'}})
         return response.json()
     }
 
@@ -34,22 +34,33 @@ coin_data = []
 //     }
 // parse_data().then(main)
 
-let = all_coin_data = []
+let all_coin_data = []
 
-
-coins.forEach((coin) => {
-    request_coins(coin).then((x) => {
-        for (let i = 0; i < x.length; i++) {
-            coin_data.push(x[i]['price_close'])
+async function update_data(){
+    coins.forEach((coin) => {
+        request_coins(coin).then((x) => {
+            for (let i = 0; i < x.length; i++) {
+                coin_data.push(x[i]['price_close'])
             }
             all_coin_data[coin] = coin_data
             coin_data = []
         })
-        })
+    })
+    setTimeout(main, 1000)
+}
+
 
 const time_labels = []
 
-setTimeout(main, 1500)
+
+// update_data().then(() => {main()})
+
+update_data()
+
+setInterval(() => {
+    update_data()
+}, 30*60*1000);
+
 
 function main(){
     console.log('Main was called succesfully...')
