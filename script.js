@@ -10,8 +10,8 @@ const labels = [
 const coins = [
     'BTC',
     'ETH',
-    'SOL',
-    'XMP'
+    'ADA',
+    'XRP'
 ]
 
 async function request_coins(coin){
@@ -34,6 +34,7 @@ coin_data = []
 //     }
 // parse_data().then(main)
 
+let = all_coin_data = []
 
 
 coins.forEach((coin) => {
@@ -41,31 +42,28 @@ coins.forEach((coin) => {
         for (let i = 0; i < x.length; i++) {
             coin_data.push(x[i]['price_close'])
             }
+            all_coin_data[coin] = coin_data
+            coin_data = []
         })
-    }).then(main)
+        })
 
 const time_labels = []
-let actual_btc_coin_data = []
 
-
-
-
-
-
+setTimeout(main, 1500)
 
 function main(){
     console.log('Main was called succesfully...')
-    sliced_btc_data = actual_btc_coin_data.slice(0,6)
-    var daily_coin_price_data = [
-        actual_btc_coin_data        
-    ]
+    // sliced_btc_data = actual_btc_coin_data.slice(0,6)
+    // var daily_coin_price_data = [
+    //     actual_btc_coin_data        
+    // ]
     
     // A function to easily make a dataset based on data
     function make_dataset(coin, coin_price) {
         let dataset = {}
         dataset['label'] = coin
-        dataset['backgroundColor'] = (coin == 'BTC' ? 'rgb(20,123,123)' : 'rgb(0, 99, 132)')
-        dataset['borderColor'] = (coin == 'BTC' ? 'rgb(20,123,123)' : 'rgb(0, 99, 132)')
+        dataset['backgroundColor'] = (coin == "BTC" ? 'rgb(20,123,123)' : 'rgb(0, 99, 132)')
+        dataset['borderColor'] = (coin == "BTC" ? 'rgb(20,123,123)' : 'rgb(0, 99, 132)')
         dataset['data'] = coin_price
         return dataset
     }
@@ -80,12 +78,16 @@ function main(){
     // dataset = coins.forEach(coin => {return make_dataset(coin)})
 
     for (let i = 0; i < coins.length; i++) {
-        daily_coin_data.push(make_dataset(coins[i], daily_coin_price_data[i]))
+        // daily_coin_data.push(make_dataset(coins[i], coin_data.splice(i,i+100)))
+        daily_coin_data.push(make_dataset(coins[i], all_coin_data[coins[i]]))
     }
 
+    fake_label = [...Array(100).keys()]
+
+    console.log(daily_coin_data)
     const data = {
-        labels: time_labels,
-        datasets: data};
+        labels: fake_label,
+        datasets: daily_coin_data};
         
     const config = {
         type: 'line',
