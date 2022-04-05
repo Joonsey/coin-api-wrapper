@@ -23,20 +23,38 @@ function sleep(ms) {
 
 let all_coin_data = []
 let all_volume_traded = []
-function update_data(){
+async function update_data(){
     coins.forEach((coin) => {
-        for (let i = 0; i < 100; i++) {
-            coin_data.push(Math.floor(Math.random()*100000))
-            volume.push(Math.floor(Math.random()*100))
+        request_coins(coin).then((x) => {
+            if (x['error'] != undefined) {
+                for (let i = 0; i < 100; i++) {
+                    coin_data.push(Math.floor(Math.random()*100000))
+                    volume.push(Math.floor(Math.random()*100))
+                }
+                
+                all_coin_data[coin] = coin_data
+                all_volume_traded[coin] = volume
+                
+                volume = []
+                coin_data = []
+                sleep(500)
+            }
+                else {
+                    for (let i = 0; i < x.length; i++) {
+                        coin_data.push(x[i]['price_close'])
+                        volume.push(x[i]['volume_traded'])
+                    }
+                    all_coin_data[coin] = coin_data
+                    all_volume_traded[coin] = volume
+                    
+                    volume = []
+                    coin_data = []
+                    sleep(500)
+                }
         }
-        
-        all_coin_data[coin] = coin_data
-        all_volume_traded[coin] = volume
-        
-        volume = []
-        coin_data = []
-        sleep(500)
+        )
     })
+    setTimeout(main, 1000)
 }
 
 
@@ -44,7 +62,10 @@ const time_labels = []
 
 
 update_data()
-main()
+
+setInterval(() => {
+    update_data()
+}, INTERVALS_IN_MINUTES*60*1000);
 
 function calculate_border_color(coin_price) {
     let background_colors = []
