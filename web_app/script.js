@@ -1,12 +1,5 @@
-const labels = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-];
-
+const INTERVALS_IN_MINUTES = 2
+var charts_exist = false
 const coins = [
     'BTC',
     'ETH',
@@ -33,17 +26,33 @@ let all_volume_traded = []
 async function update_data(){
     coins.forEach((coin) => {
         request_coins(coin).then((x) => {
-            for (let i = 0; i < x.length; i++) {
-                coin_data.push(x[i]['price_close'])
-                volume.push(x[i]['volume_traded'])
+            if (x['error'] != undefined) {
+                for (let i = 0; i < 100; i++) {
+                    coin_data.push(Math.floor(Math.random()*1000))
+                    volume.push(Math.floor(Math.random()*100))
+                }
+                
+                all_coin_data[coin] = coin_data
+                all_volume_traded[coin] = volume
+                
+                volume = []
+                coin_data = []
+                sleep(500)
             }
-            all_coin_data[coin] = coin_data
-            all_volume_traded[coin] = volume
-
-            volume = []
-            coin_data = []
-            sleep(500)
-        })
+                else {
+                    for (let i = 0; i < x.length; i++) {
+                        coin_data.push(x[i]['price_close'])
+                        volume.push(x[i]['volume_traded'])
+                    }
+                    all_coin_data[coin] = coin_data
+                    all_volume_traded[coin] = volume
+                    
+                    volume = []
+                    coin_data = []
+                    sleep(500)
+                }
+        }
+        )
     })
     setTimeout(main, 1000)
 }
@@ -52,13 +61,11 @@ async function update_data(){
 const time_labels = []
 
 
-// update_data().then(() => {main()})
-
 update_data()
 
 setInterval(() => {
     update_data()
-}, 60*60*1000);
+}, INTERVALS_IN_MINUTES*60*1000);
 
 function calculate_border_color(coin_price) {
     let background_colors = []
@@ -92,11 +99,11 @@ function calculate_stats(coin) {
         
         most_recent_volume_trade = all_volume.slice(-1)
         most_recent_price = all_coin_price.slice(-1)
-        previous_price = all_coin_price.slice(-2)
+        previous_price = all_coin_price.slice(-2, -1)
     
-        const change = (most_recent_price - previous_price) / previous_price * 100
+        const change = Math.floor((most_recent_price - previous_price) / previous_price * 100)
         const four_day_avg = (all_coin_price.reduce((a,b)=>a+b)) / all_coin_price.length
-        const one_day_avg = all_coin_price.slice(all_coin_price.length-24, 0)
+        const one_day_avg = Math.floor((all_coin_price.slice(all_coin_price.length-24, -1).reduce((a,b) => a+b) / 24))
     
         stats = []
         stats.push(most_recent_volume_trade)
@@ -137,83 +144,67 @@ function main(){
         return dataset
     }
     
-    
-    var daily_coin_data = []
-    
-    // !!!
-    // Tried to use this cool arrow function to construct a complete dataframe with the dataset.
-    // Sadly arrow functions don't return a value and I didn't care to fuck around with it just to make it cool.
-    // NOTE in retrospect I could have used a callback function instead, but I still don't care enough to change it just so it looks cool.
-    // dataset = coins.forEach(coin => {return make_dataset(coin)})
-
-    for (let i = 0; i < coins.length; i++) {
-        // daily_coin_data.push(make_dataset(coins[i], coin_data.splice(i,i+100)))
-        daily_coin_data.push(make_dataset(coins[i], all_coin_data[coins[i]]))
-    }
 
     // all values are empty except every 24th value is the day
     // TODO
     fake_label = [...Array(100).keys()]
 
-    console.log(daily_coin_data)
-    var data = {
-        labels: fake_label,
-        datasets: daily_coin_data};
-        
-    var config = {
-        type: 'line',
-        data: data,
-        options: {
-            scales: {
-                y: {
-                    ticks: {color: 'rgb(255,255,255)'}
-                },
-                x: {display: 0}
-            }
-        }
-    }
-        
-    // const myChart = new Chart(
-    //     document.getElementById('chart'),
-    //     config
-    //     );
-
     const container = document.querySelector('.display-container')
     const text_container = document.querySelector('.text-container')
-     
+    
+
     coins.forEach(coin => {
+
+    
+
         canvas = document.createElement("canvas")
         line_container = document.createElement('div')
         graph_container = document.createElement('div')
         graph_container.classList += 'graph-container'
         line_container.classList += 'line-container'
-        var text_container_template = text_container.cloneNode(true)
-        
-        stats = calculate_stats(coin)
-
-        text_container_template.childNodes[1].innerHTML += "<p class='stat'> " + stats[0] + "</p>"
-        text_container_template.childNodes[3].innerHTML += "<p class='stat'> " + stats[1] + "</p>"
-        text_container_template.childNodes[5].innerHTML += "<p class='stat'> " + stats[2] + "</p>"
-        text_container_template.childNodes[7].innerHTML += "<p class='stat'> " + stats[3] + "</p>"
-
-        
         canvas.id += coin
         line_container.appendChild(canvas)
         graph_container.appendChild(line_container)
-        graph_container.appendChild(text_container_template)
+        var text_container_template = text_container.cloneNode(true)
 
+        stats = calculate_stats(coin)
+
+        text_container_template.childNodes[1].innerHTML += "<p class='stat'id=+"+coin+"> " + stats[0] + "</p>"
+        text_container_template.childNodes[3].innerHTML += "<p class='stat'id=+"+coin+"> " + stats[1] + "%</p>"
+        text_container_template.childNodes[5].innerHTML += "<p class='stat'id=+"+coin+"> " + stats[2] + "</p>"
+        text_container_template.childNodes[7].innerHTML += "<p class='stat'id=+"+coin+"> " + stats[3] + "</p>"
+
+        
+        graph_container.appendChild(text_container_template)
         container.appendChild(graph_container)
+    
+        
+
         
 
         data = {
             labels: fake_label,
-            datasets: daily_coin_data[coin]};
+            datasets: [make_dataset(coin, all_coin_data[coin])]}
 
         
         config = {
             type: 'line',
             data: data,
             options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        text: coin,
+                        display: true,
+                        color: "rgb(255,255,255)",
+                        fullsize: true,
+                        font: {
+                            size: "27px"
+                        }
+                    }
+                },
                 scales: {
                     y: {
                         ticks: {color: 'rgb(255,255,255)'}
@@ -222,9 +213,12 @@ function main(){
                 }
             }
         }
+
+
         new Chart(canvas, config)
-        text_container.remove()   
+        text_container.remove()  
     });
-        
-        
+    
+    
+    charts_exist = true 
 }
