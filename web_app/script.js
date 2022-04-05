@@ -1,4 +1,4 @@
-const INTERVALS_IN_MINUTES = 2
+const INTERVALS_IN_MINUTES = 60
 var charts_exist = false
 const coins = [
     'BTC',
@@ -28,7 +28,7 @@ async function update_data(){
         request_coins(coin).then((x) => {
             if (x['error'] != undefined) {
                 for (let i = 0; i < 100; i++) {
-                    coin_data.push(Math.floor(Math.random()*1000))
+                    coin_data.push(Math.floor(Math.random()*100000))
                     volume.push(Math.floor(Math.random()*100))
                 }
                 
@@ -154,8 +154,6 @@ function main(){
     
 
     coins.forEach(coin => {
-
-    
 
         canvas = document.createElement("canvas")
         line_container = document.createElement('div')
