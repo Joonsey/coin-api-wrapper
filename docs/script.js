@@ -7,13 +7,6 @@ const coins = [
     'XRP'
 ]
 
-async function request_coins(coin){
-    const response = await fetch("http://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_"+coin+"_USD/latest?period_id=1HRS",
-    {headers: {'X-CoinAPI-Key' : '4C3DE064-C4ED-40D8-B61A-504E43C15FA3'}}
-    )
-        return response.json()
-    }
-
 coin_data = []
 volume = []
 function sleep(ms) {
@@ -35,7 +28,6 @@ function update_data(){
         
         volume = []
         coin_data = []
-        sleep(500)
     })
 }
 
@@ -43,8 +35,6 @@ function update_data(){
 const time_labels = []
 
 
-update_data()
-main()
 
 function calculate_border_color(coin_price) {
     let background_colors = []
@@ -199,3 +189,7 @@ function main(){
     
     charts_exist = true 
 }
+
+
+update_data()
+main()
