@@ -37,7 +37,6 @@ async function update_data(){
                 
                 volume = []
                 coin_data = []
-                sleep(500)
             }
                 else {
                     for (let i = 0; i < x.length; i++) {
@@ -49,7 +48,7 @@ async function update_data(){
                     
                     volume = []
                     coin_data = []
-                    sleep(500)
+                    sleep(1000)
                 }
         }
         )
@@ -107,9 +106,9 @@ function calculate_stats(coin) {
     
         stats = []
         stats.push(most_recent_volume_trade)
-        stats.push(change)
-        stats.push(one_day_avg)
-        stats.push(four_day_avg)
+        stats.push(change.toFixed(3))
+        stats.push(one_day_avg.toFixed(3))
+        stats.push(four_day_avg.toFixed(3))
     } catch {
         stats = [0,0,0,0]
     }
@@ -182,8 +181,8 @@ function main(){
 
         data = {
             labels: fake_label,
-            datasets: [make_dataset(coin, all_coin_data[coin])]}
-
+            datasets: [make_dataset(coin, all_coin_data[coin])]
+        }
         
         config = {
             type: 'line',
