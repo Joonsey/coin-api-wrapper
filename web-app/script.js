@@ -51,10 +51,11 @@ async function update_data(test_mode=false){
                     
                     volume = []
                     coin_data = []
-                    await sleep(1000)
+                    sleep(2000)
                 }
         }
         )
+    
     })
     setTimeout(main, 1000)
 }
